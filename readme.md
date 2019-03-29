@@ -26,7 +26,7 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 
 
 ### ● High fidelity textures
-The method is able to produce face textures with high identity similarity to input images. Lighting information is also disentangled to get a pure albedo.
+The method produces face textures with high identity similarity to input images. Scene illumination is also disentangled to guarantee a pure albedo.
 <p align="center"> 
 <img src="/images/albedo.png">
 </p>
@@ -63,6 +63,10 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model)
 - [Expression Basis (transferred from Facewarehouse by Yudong et al.)](https://github.com/Juyong/3DFace)
 
+Optional:
+
+- [tf mesh renderer](https://github.com/google/tf_mesh_renderer) (We use it as renderer while training. Can be used at test stage too. Only on Linux.)
+
 
 ### Usage ###
 
@@ -87,7 +91,7 @@ python demo.py
 
 6. To check the results, see ./output subfolder which contains:
 	- "xxx.mat" : consists of cropped input image, corresponding 5p and 68p landmarks, and output coefficients of R-Net.
-	- "xxx_mesh.obj" : Reconstructed 3D face mesh in canonical view (best viewed in MeshLab).
+	- "xxx_mesh.obj" : 3D face mesh in canonical view (best viewed in MeshLab).
 
 ### Tips ###
 
