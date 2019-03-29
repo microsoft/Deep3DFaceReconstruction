@@ -17,6 +17,7 @@ The method enforces a hybrid-level weakly-supervised training to achieve accurat
 The method reconstructs faces with high accuracy. Quantitative evaluations (shape errors in mm) on several benchmarks show its state-of-the-art performance:
 
 <p align="center">
+
 |Method|FaceWareHouse|Florence|BU3DFE|
 |:---:|:---:|:---:|:---:|
 |[Tewari et al. 17](https://arxiv.org/abs/1703.10580)</center>|2.19±0.54|-|-|
@@ -25,6 +26,7 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 |[Sela et al. 17](https://arxiv.org/abs/1703.10131)|-|-|2.91±0.60|
 |[PRN 18](https://arxiv.org/abs/1803.07835)|-|-|1.86±0.47|
 |Ours|**1.81±0.50**|**1.67±0.50**|**1.40±0.31**|
+
 </p>
 
 
