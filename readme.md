@@ -1,13 +1,13 @@
 ## Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set ##
 
 <p align="center"> 
-<img src="/images/example.png">
+<img src="/images/example.gif">
 </p>
 
 
 This is an python implement of [*Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set*](https://arxiv.org/abs/1903.08527).
 
-The method enforces a hybrid-level weakly-supervised training to achieve accurate CNN-based face reconstruction.
+The method enforces a hybrid-level weakly-supervised training to achieve accurate CNN-based 3D face reconstruction.
 
 ## Features
 
@@ -26,7 +26,7 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 
 
 ### ● High fidelity textures
-The method produces face textures with high identity similarity to input images. Scene illumination is also disentangled to guarantee a pure albedo.
+The method produces high fidelity face textures meanwhile preserves identity information of input images. Scene illumination is also disentangled to guarantee a pure albedo.
 <p align="center"> 
 <img src="/images/albedo.png">
 </p>
@@ -96,7 +96,10 @@ python demo.py
 ### Tips ###
 
 1. The model is trained without augmentation so that a pre-alignment with 5 facial landmarks is necessary. We put some examples in the ./input subfolder for reference.
-2. Current model is trained under the assumption of 3-channel scene illumination (instead of monochromatic lights described in the paper).    
+
+2. Current model is trained under the assumption of 3-channel scene illumination (instead of monochromatic lights described in the paper).  
+  
+3. If you have any questions, please contact Yu Deng (v-denyu@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
 
 
 ## Citation
