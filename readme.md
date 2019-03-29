@@ -1,9 +1,7 @@
 ## Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set ##
 
 <p align="center"> 
-<img src="/images/movie_6.gif">
-<img src="/images/movie_17.gif">
-<img src="/images/movie_23.gif">
+<img src="/images/example.png">
 </p>
 
 
@@ -16,7 +14,6 @@ The method enforces a hybrid-level weakly-supervised training to achieve accurat
 ### ● Accurate shapes
 The method reconstructs faces with high accuracy. Quantitative evaluations (shape errors in mm) on several benchmarks show its state-of-the-art performance:
 
-<p align="center">
 
 |Method|FaceWareHouse|Florence|BU3DFE|
 |:---:|:---:|:---:|:---:|
@@ -26,8 +23,6 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 |[Sela et al. 17](https://arxiv.org/abs/1703.10131)|-|-|2.91±0.60|
 |[PRN 18](https://arxiv.org/abs/1803.07835)|-|-|1.86±0.47|
 |Ours|**1.81±0.50**|**1.67±0.50**|**1.40±0.31**|
-
-</p>
 
 
 ### ● High fidelity textures
@@ -43,10 +38,18 @@ The method can provide reasonable results under extreme conditions such as large
 </p>
 
 ### ● Aligned with images
-Our method aligns reconstruction faces with input images. It provides face pose information and 68 facial landmarks which are useful for other tasks.
+Our method aligns reconstruction faces with input images. It provides face pose estimation and 68 facial landmarks which are useful for other tasks. We conduct an experiment on AFLW_2000 dataset to evaluate the performance, as  is shown in the table below:
 <p align="center"> 
 <img src="/images/alignment.png">
 </p>
+
+|Method|[0°,30°]|[30°,60°]|[60°,90°]|Overall|
+|:---:|:---:|:---:|:---:|:---:|
+|[3DDFA 16](https://arxiv.org/abs/1511.07212)</center>|3.78|4.54|7.93|5.42|
+|[3DDFA+SDM 16](https://arxiv.org/abs/1511.07212)|3.43|4.24|7.17|4.94|
+|[Bulat et al. 17](https://arxiv.org/abs/1703.00862)|**2.47**|**3.01**|**4.31**|**3.26**|
+|[PRN 18](https://arxiv.org/abs/1803.07835)|2.75|3.51|4.61|3.62|
+|Ours|2.56|3.11|4.45|3.37|
 
 ### ● Easy and Fast
 Faces are represented with Basel Face Model 2009, which is easy for further manipulations (e.g expression transfer). ResNet-50 is used as backbone network to achieve over 50 fps (on GTX 1080) for reconstructions.
