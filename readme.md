@@ -34,11 +34,13 @@ The method can provide reasonable results under extreme conditions such as large
 <p align="center"> 
 <img src="/images/extreme.png">
 </p>
+
 ### Aligned with images
 Our method aligns reconstruction faces with input images. It provides face pose information and 68 facial landmarks which are useful for other tasks.
 <p align="center"> 
 <img src="/images/alignment.png">
 </p>
+
 ### Easy and Fast
 Faces are represented with Basel Face Model 2009, which is easy for further manipulations (e.g expression transfer). ResNet-50 is used as backbone network to achieve over 50 fps (on GTX 1080) for reconstructions.
 
