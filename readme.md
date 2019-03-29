@@ -5,7 +5,7 @@
 </p>
 
 
-This is an python implement of *Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set*.
+This is an python implement of [*Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set*](https://arxiv.org/abs/1903.08527).
 
 The method enforces a hybrid-level weakly-supervised training to achieve accurate CNN-based face reconstruction.
 
