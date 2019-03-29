@@ -38,7 +38,7 @@ The method can provide reasonable results under extreme conditions such as large
 </p>
 
 ### ● Aligned with images
-Our method aligns reconstruction faces with input images. It provides face pose estimation and 68 facial landmarks which are useful for other tasks. We conduct an experiment on AFLW_2000 dataset to evaluate the performance, as  is shown in the table below:
+Our method aligns reconstruction faces with input images. It provides face pose estimation and 68 facial landmarks which are useful for other tasks. We conduct an experiment on AFLW_2000 dataset (NME) to evaluate the performance, as  is shown in the table below:
 <p align="center"> 
 <img src="/images/alignment.png">
 </p>
