@@ -12,17 +12,17 @@ The method enforces a hybrid-level weakly-supervised training to achieve accurat
 ## Features
 
 ### Accurate shapes
-The method reconstructs faces with high accuracy. Quantitative evaluations on several benchmarks show its state-of-the-art performance. 
-<center>
+The method reconstructs faces with high accuracy. Quantitative evaluations (shape errors) on several benchmarks show its state-of-the-art performance:
+
 |Method       |FaceWareHouse|Florence|BU3DFE|
 |-------------|-------------|--------|------|
-|[Tewari et al. 17]()|2.19         |-       |-     |
-|[Tewari et al. 18]()|1.84         |-       |-     |
-|[Genova et al. 18]()|-            |1.77    |-     |
-|[Sela et al. 18]()  |-            |-       |2.91  |
-|[PRN]()	  |-            |-       |1.86  |
-|Ours         |1.81         |1.67    |1.40  |
-</center>
+|[Tewari et al. 17](https://arxiv.org/abs/1703.10580)|2.19         |-       |-     |
+|[Tewari et al. 18](https://arxiv.org/abs/1712.02859)|1.84         |-       |-     |
+|[Genova et al. 18](https://arxiv.org/abs/1806.06098)|-            |1.77    |-     |
+|[Sela et al. 17](https://arxiv.org/abs/1703.10131)  |-            |-       |2.91  |
+|[PRN 18](https://arxiv.org/abs/1803.07835)	  |-            |-       |1.86  |
+|Ours         |**1.81**        |**1.67**    |**1.40**  |
+
 ### High fidelity textures
 
 ### Robust
