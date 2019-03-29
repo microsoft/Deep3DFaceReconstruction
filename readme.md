@@ -1,7 +1,9 @@
 ## Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set ##
 
 <p align="center"> 
-<img src="/images/example.png">
+<img src="/images/movie_6.gif">
+<img src="/images/movie_17.gif">
+<img src="/images/movie_23.gif">
 </p>
 
 
@@ -11,11 +13,10 @@ The method enforces a hybrid-level weakly-supervised training to achieve accurat
 
 ## Features
 
-### Accurate shapes
+### ● Accurate shapes
 The method reconstructs faces with high accuracy. Quantitative evaluations (shape errors in mm) on several benchmarks show its state-of-the-art performance:
 
-<center>
-
+<p align="center">
 |Method|FaceWareHouse|Florence|BU3DFE|
 |:---:|:---:|:---:|:---:|
 |[Tewari et al. 17](https://arxiv.org/abs/1703.10580)</center>|2.19±0.54|-|-|
@@ -24,28 +25,28 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 |[Sela et al. 17](https://arxiv.org/abs/1703.10131)|-|-|2.91±0.60|
 |[PRN 18](https://arxiv.org/abs/1803.07835)|-|-|1.86±0.47|
 |Ours|**1.81±0.50**|**1.67±0.50**|**1.40±0.31**|
+</p>
 
-</center>
 
-### High fidelity textures
+### ● High fidelity textures
 The method is able to produce face textures with high identity similarity to input images. Lighting information is also disentangled to get a pure albedo.
 <p align="center"> 
 <img src="/images/albedo.png">
 </p>
 
-### Robust
+### ● Robust
 The method can provide reasonable results under extreme conditions such as large pose and occlusions.
 <p align="center"> 
 <img src="/images/extreme.png">
 </p>
 
-### Aligned with images
+### ● Aligned with images
 Our method aligns reconstruction faces with input images. It provides face pose information and 68 facial landmarks which are useful for other tasks.
 <p align="center"> 
 <img src="/images/alignment.png">
 </p>
 
-### Easy and Fast
+### ● Easy and Fast
 Faces are represented with Basel Face Model 2009, which is easy for further manipulations (e.g expression transfer). ResNet-50 is used as backbone network to achieve over 50 fps (on GTX 1080) for reconstructions.
 
 
