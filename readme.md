@@ -61,7 +61,7 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - Python >= 3.5 (numpy, scipy, pillow, opencv)
 - Tensorflow >= 1.4
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model)
-- [Expression Basis (transferred from Facewarehouse by Yudong et al.)](https://github.com/Juyong/3DFace)
+- [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace)
 
 Optional:
 
