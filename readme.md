@@ -98,8 +98,10 @@ python demo.py
 1. The model is trained without augmentation so that a pre-alignment with 5 facial landmarks is necessary. We put some examples in the ./input subfolder for reference.
 
 2. Current model is trained under the assumption of 3-channel scene illumination (instead of monochromatic lights described in the paper).  
+
+3. We exclude ear and neck region of original BFM09. To see which vertex is preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
   
-3. If you have any questions, please contact Yu Deng (v-denyu@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
+4. If you have any questions, please contact Yu Deng (v-denyu@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
 
 
 ## Citation
