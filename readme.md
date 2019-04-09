@@ -79,7 +79,7 @@ cd Deep3DFaceReconstruction
 
 2. Download the BFM09 model and put "01_MorphableModel.mat" into ./BFM subfolder.
 
-3. Download the Expression Basis (which is inside "CoarseData.zip"), and put "Exp_Pca.bin" into ./BFM subfolder.
+3. Download the Expression Basis provided by Guo (You can find a link named CoarseData in the first row of Introduction part in their repository. Download and unzip the Coarse\_Dataset.zip), and put "Exp_Pca.bin" into ./BFM subfolder.
 
 4. Download the trained model at [GoogleDrive](https://drive.google.com/file/d/1RSEkXwF5BGelvBaIJFtKIxjUcR5ULSK0/view?usp=sharing), and put it into ./network subfolder.
 
