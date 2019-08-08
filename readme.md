@@ -5,9 +5,11 @@
 </p>
 
 
-This is an python implement of [*Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set*](https://arxiv.org/abs/1903.08527).
+This is a python implementation of the following paper:
 
-The method enforces a hybrid-level weakly-supervised training to achieve accurate CNN-based 3D face reconstruction.
+Y. Deng, J. Yang, S. Xu, D. Chen, Y. Jia, and X. Tong. [Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set](https://arxiv.org/abs/1903.08527). IEEE Computer Vision and Pattern Recognition Workshop (CVPRW) on Analysis and Modeling of Faces and Gestures (AMFG), 2019. (__Best Paper Award!__)
+
+The method enforces a hybrid-level weakly-supervised training to for CNN-based 3D face reconstruction. It is fast, accurate, and robust to pose and occlussions. It achieves state-of-the-art performance on multiple datasets such as FaceWarehouse, MICC Florence and BU-3DFE.
 
 ## Features
 
@@ -97,9 +99,9 @@ python demo.py
 
 1. The model is trained without augmentation so that a pre-alignment with 5 facial landmarks is necessary. We put some examples in the ./input subfolder for reference.
 
-2. Current model is trained under the assumption of 3-channel scene illumination (instead of monochromatic lights described in the paper).  
+2. Current model is trained under the assumption of 3-channel scene illumination (instead of white light described in the paper).  
 
-3. We exclude ear and neck region of original BFM09. To see which vertex is preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
+3. We exclude ear and neck region of original BFM09. To see which vertices are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
   
 4. If you have any questions, please contact Yu Deng (v-denyu@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
 
@@ -108,11 +110,9 @@ python demo.py
 
 Please cite the following paper if this model helps your research:
 
-	@misc{deng2019accurate,
+	@inproceedings{deng2019accurate,
 	    title={Accurate 3D Face Reconstruction with Weakly-Supervised Learning: From Single Image to Image Set},
 	    author={Yu Deng and Jiaolong Yang and Sicheng Xu and Dong Chen and Yunde Jia and Xin Tong},
-	    year={2019},
-	    eprint={1903.08527},
-	    archivePrefix={arXiv},
-	    primaryClass={cs.CV}
+	    booktitle={IEEE Computer Vision and Pattern Recognition Workshops},
+	    year={2019}
 	}
