@@ -61,9 +61,9 @@ def demo():
 
 				# reshape outputs
 				input_img = np.squeeze(input_img)
-				shape = np.squeeze(face_shape,[0])
-				color = np.squeeze(face_color,[0])
-				landmarks_2d = np.squeeze(landmarks_2d,[0])
+				shape = np.squeeze(face_shape, (0))
+				color = np.squeeze(face_color, (0))
+				landmarks_2d = np.squeeze(landmarks_2d, (0))
 
 				# save output files
 				# cropped image, which is the direct input to our R-Net
