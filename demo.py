@@ -69,8 +69,8 @@ def demo():
 				# cropped image, which is the direct input to our R-Net
 				# 257 dim output coefficients by R-Net
 				# 68 face landmarks of cropped image
-				savemat(os.path.join(save_path,file.split('\\')[-1].replace('.png','.mat')),{'cropped_img':input_img[:,:,::-1],'coeff':coef,'landmarks_2d':landmarks_2d,'lm_5p':lm_new})
-				save_obj(os.path.join(save_path,file.split('\\')[-1].replace('.png','_mesh.obj')),shape,tri,np.clip(color,0,255)/255) # 3D reconstruction face (in canonical view)
+				savemat(os.path.join(save_path,file.split(os.path.sep)[-1].replace('.png','.mat')),{'cropped_img':input_img[:,:,::-1],'coeff':coef,'landmarks_2d':landmarks_2d,'lm_5p':lm_new})
+				save_obj(os.path.join(save_path,file.split(os.path.sep)[-1].replace('.png','_mesh.obj')),shape,tri,np.clip(color,0,255)/255) # 3D reconstruction face (in canonical view)
 
 if __name__ == '__main__':
 	demo()
