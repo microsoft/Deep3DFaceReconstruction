@@ -93,11 +93,11 @@ python demo.py
 		- recon_img: an RGBA reconstruction image aligned with the input image.
 		- coeff: output coefficients of R-Net.
 		- face_shape: vertex positions of 3D face in the world coordinate.
-		- face_texture: vertex texture of 3D face, which excludes lighting information.
+		- face_texture: vertex texture of 3D face, which excludes lighting effect.
 		- face_color: vertex color of 3D face, which takes lighting into consideration.
 		- lm\_68p: 68 2D facial landmarks derived from the reconstructed 3D face. The landmarks are aligned with cropped_img.
 		- lm\_5p: 5 detected landmarks aligned with cropped_img. 
-	- "xxx_mesh.obj" : 3D face mesh in canonical view (best viewed in MeshLab).
+	- "xxx_mesh.obj" : 3D face mesh in the world coordinate (best viewed in MeshLab).
 
 ### Cautions ###
 
