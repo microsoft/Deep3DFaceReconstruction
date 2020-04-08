@@ -106,7 +106,7 @@ The face reconstruction process is totally transferred to tensorflow version whi
 
 1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Note that these detectors may return wrong landmarks under large poses which could influence the alignment result. We recommend using [Howfar](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks with semantic consistency for large pose images. We also put some examples in the ./input subfolder for reference.
 <p align="center"> 
-<img src="/images/lm5p.png" width="120">     <img src="/images/lm3d.png" width="150">
+<img src="/images/lm5p.png" width="150">     <img src="/images/lm3d.png" width="190">
 </p>
 
 2. We assume a [pinhole camera model](https://en.wikipedia.org/wiki/Pinhole_camera_model) for face projection. The camera is positioned at (0,0,10) (dm) in the world coordinate and points to the negative z axis. We set the camera focal to 1015 empirically and fix it during training and inference time. Faces in canonical views are at the origin of the world coordinate and facing the positive z axis. Rotations and translations predicted by the R-Net are all with respect to the world coordinate.
