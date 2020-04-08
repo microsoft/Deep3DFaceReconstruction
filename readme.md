@@ -99,6 +99,9 @@ python demo.py
 		- lm\_5p: 5 detected landmarks aligned with cropped_img. 
 	- "xxx_mesh.obj" : 3D face mesh in the world coordinate (best viewed in MeshLab).
 
+### Latest Update (2020.4)###
+The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy for face reconstruction. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
+
 ### Cautions ###
 
 1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Note that these detectors may return wrong landmarks under large poses which could influence the alignment result. We recommend using [Howfar](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks with semantic consistency for large pose images. We also put some examples in the ./input subfolder for reference.
