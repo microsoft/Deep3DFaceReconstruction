@@ -3,20 +3,6 @@ from PIL import Image
 from scipy.io import loadmat,savemat
 from array import array
 
-# define facemodel for reconstruction
-class BFM():
-	def __init__(self):
-		model_path = './BFM/BFM_model_front.mat'
-		model = loadmat(model_path)
-		self.meanshape = model['meanshape'] # mean face shape 
-		self.idBase = model['idBase'] # identity basis
-		self.exBase = model['exBase'] # expression basis
-		self.meantex = model['meantex'] # mean face texture
-		self.texBase = model['texBase'] # texture basis
-		self.point_buf = model['point_buf'] # adjacent face index for each vertex, starts from 1 (only used for calculating face normal)
-		self.tri = model['tri'] # vertex index for each triangle face, starts from 1
-		self.keypoints = np.squeeze(model['keypoints']).astype(np.int32) - 1 # 68 face landmark index, starts from 0
-
 # load expression basis
 def LoadExpBasis():
 	n_vertex = 53215
