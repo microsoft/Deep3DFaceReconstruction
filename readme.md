@@ -103,19 +103,24 @@ python demo.py
 		- lm\_5p: 5 detected landmarks aligned with cropped_img. 
 	- "xxx_mesh.obj" : 3D face mesh in canonical view (best viewed in MeshLab).
 
-### Common Issues ###
+### Cautions ###
 
-1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks detected on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment.
+1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Note that these detectors may return wrong landmarks under large poses which could influence the alignment result. We recommend using [Howfar](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks with semantic consistency for large pose images. We also put some examples in the ./input subfolder for reference.
 <p align="center"> 
-<img src="/images/lm5p.png" width="100"><img src="/images/lm3d.png" width="90">
+<img src="/images/lm5p.png" width="120">     <img src="/images/lm3d.png" width="100">
 </p>
-2. We put some examples in the ./input subfolder for reference.
 
-2. Current model is trained under the assumption of 3-channel scene illumination (instead of white light described in the paper).  
+2. We assume a [pinhole camera model](https://en.wikipedia.org/wiki/Pinhole_camera_model) for face projection. The camera is positioned at (0,0,10) (dm) in the world coordinate and points to the negative z axis. We set the camera focal to 1015 empirically and fix it during training and inference time. Faces in canonical views are at the origin of the world coordinate and facing the positive z axis. Rotations and translations predicted by the R-Net are all with respect to the world coordinate.
+<p align="center"> 
+<img src="/images/camera.png" width="300">
+</p>
 
-3. We exclude ear and neck region of original BFM09. To see which vertices are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
+3. Current model is trained under the assumption of 3-channel scene illumination instead of white light described in the paper. As a result, the gamma coefficient that controls lighting has a dimension of 27 instead of 9. 
+
+4. We exclude ear and neck region of original BFM09 to allow the network concentrate on the face region. To see which vertices in the original model are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
+5. Our model may give inferior results for selfies that often have severe distortions of face geometry. In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in training data.
   
-4. If you have any questions, please contact Yu Deng (v-denyu@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
+5. If you have any further questions, please contact Yu Deng (t-yudeng@microsoft.com) or Jiaolong Yang (jiaoyan@microsoft.com).
 
 
 ## Citation
