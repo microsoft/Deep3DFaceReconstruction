@@ -48,6 +48,7 @@ class Face3D():
 		# landmark_p: [batchsize,68,2]	
 		face_landmark_t = self.Compute_landmark(face_shape_t,self.facemodel)
 		landmark_p = self.Projection_block(face_landmark_t)   # 256*256 image
+		landmark_p = tf.stack([landmark_p[:,:,0],223. - landmark_p[:,:,1]],axis = 2)
 		self.landmark_p = landmark_p
 
 		# [batchsize,N,3] vertex color (in RGB order)

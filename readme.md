@@ -58,18 +58,18 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 
 
 ## Getting Started
-### Prerequisite ###
+### System Requirements ###
 
-- Python >= 3.5 (numpy, scipy, pillow, opencv)
-- Tensorflow >= 1.4
-- [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model)
-- [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace)
-
-Optional:
-
-- [tf mesh renderer](https://github.com/google/tf_mesh_renderer) (We use it as renderer while training. Can be used at test stage too. Only on Linux.)
-
-
+- Reconstructions can be done on both Windows and Linux. However, we suggest running on Linux because the rendering process is only supported on Linux currently. If you wish to run on Windows, you have to comment out the rendering part. 
+- Python >= 3.5 (numpy, scipy, pillow, opencv).
+- Tensorflow 1.4 ~ 1.12.
+- [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). Our method depends on BFM09 to reconstruct 3D faces from regressed coefficients.
+- [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace). The original BFM09 model does not handle expression variations so extra expression basis are needed. 
+- [tf mesh renderer](https://github.com/google/tf_mesh_renderer). Install the library via
+```
+pip install mesh_renderer
+```
+. Or you can follow the instruction of tf mesh render to install it using Bazel.  Note that current rendering tool does not support tensorflow version higher than 1.13 and can only be used on Linux.
 ### Usage ###
 
 1. Clone the repository 
@@ -79,11 +79,11 @@ git clone https://github.com/Microsoft/Deep3DFaceReconstruction
 cd Deep3DFaceReconstruction
 ```
 
-2. Download the BFM09 model and put "01_MorphableModel.mat" into ./BFM subfolder.
+2. Due to the license agreement of Basel Face Model, you have to download the BFM09 model after submitting an application on its [home page](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-2&id=downloads). After getting the access to BFM data, download "01_MorphableModel.mat" and put it into ./BFM subfolder.
 
-3. Download the Expression Basis provided by Guo (You can find a link named CoarseData in the first row of Introduction part in their repository. Download and unzip the Coarse\_Dataset.zip), and put "Exp_Pca.bin" into ./BFM subfolder.
+3. Download the Expression Basis provided by [Guo](https://github.com/Juyong/3DFace). Here we provide a [quick link](https://drive.google.com/open?id=1bw5Xf8C12pWmcMhNEu6PtsYVZkVucEN6) to it. Download "Exp_Pca.bin" and put it into ./BFM subfolder. The expression basis are constructed using [Facewarehouse](kunzhou.net/zjugaps/facewarehouse/) data and transferred to BFM topology.
 
-4. Download the trained model at [GoogleDrive](https://drive.google.com/file/d/1RSEkXwF5BGelvBaIJFtKIxjUcR5ULSK0/view?usp=sharing), and put it into ./network subfolder.
+4. Download the trained [reconstruction network](https://drive.google.com/file/d/1RSEkXwF5BGelvBaIJFtKIxjUcR5ULSK0/view?usp=sharing), and put it into ./network subfolder.
 
 5. Run the demo code.
 
@@ -91,13 +91,25 @@ cd Deep3DFaceReconstruction
 python demo.py
 ```
 
-6. To check the results, see ./output subfolder which contains:
-	- "xxx.mat" : consists of cropped input image, corresponding 5p and 68p landmarks, and output coefficients of R-Net.
+6. ./input subfolder contains several test images and ./output subfolder stores their reconstruction results. For each input test image, two output files can be obtained after running the demo code:
+	- "xxx.mat" : 
+		- cropped_img: an RGB image after alignment, which is the input to the R-Net
+		- recon_img: an RGBA reconstruction image aligned with the input image.
+		- coeff: output coefficients of R-Net.
+		- face_shape: vertex positions of 3D face in the world coordinate.
+		- face_texture: vertex texture of 3D face, which excludes lighting information.
+		- face_color: vertex color of 3D face, which takes lighting into consideration.
+		- lm\_68p: 68 2D facial landmarks derived from the reconstructed 3D face. The landmarks are aligned with cropped_img.
+		- lm\_5p: 5 detected landmarks aligned with cropped_img. 
 	- "xxx_mesh.obj" : 3D face mesh in canonical view (best viewed in MeshLab).
 
-### Tips ###
+### Common Issues ###
 
-1. The model is trained without augmentation so that a pre-alignment with 5 facial landmarks is necessary. We put some examples in the ./input subfolder for reference.
+1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks detected on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment.
+<p align="center"> 
+<img src="/images/lm5p.png" width="100"><img src="/images/lm3d.png" width="90">
+</p>
+2. We put some examples in the ./input subfolder for reference.
 
 2. Current model is trained under the assumption of 3-channel scene illumination (instead of white light described in the paper).  
 

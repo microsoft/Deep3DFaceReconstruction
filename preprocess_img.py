@@ -2,7 +2,7 @@ import numpy as np
 from scipy.io import loadmat,savemat
 from PIL import Image
 
-#calculating least sqaures problem
+#calculating least square problem
 def POS(xp,x):
 	npts = xp.shape[1]
 
@@ -56,7 +56,7 @@ def Preprocess(img,lm,lm3D):
 	# change from image plane coordinates to 3D sapce coordinates(X-Y plane)
 	lm = np.stack([lm[:,0],h0 - 1 - lm[:,1]], axis = 1)
 
-	# calculate translation and scale factors using 5 facial landmarks and standard landmarks
+	# calculate translation and scale factors using 5 facial landmarks and standard landmarks of a 3D face
 	t,s = POS(lm.transpose(),lm3D.transpose())
 
 	# processing the image
