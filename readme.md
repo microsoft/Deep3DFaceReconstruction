@@ -99,7 +99,7 @@ python demo.py
 		- lm\_5p: 5 detected landmarks aligned with cropped_img. 
 	- "xxx_mesh.obj" : 3D face mesh in the world coordinate (best viewed in MeshLab).
 
-### Latest Update (2020.4)###
+### Latest Update (2020.4) ###
 The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy for face reconstruction. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
 
 ### Cautions ###
