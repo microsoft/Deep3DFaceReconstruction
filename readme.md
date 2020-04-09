@@ -45,6 +45,7 @@ Our method aligns reconstruction faces with input images. It provides face pose 
 <img src="/images/alignment.png">
 </p>
 
+<p align="center">
 |Method|[0°,30°]|[30°,60°]|[60°,90°]|Overall|
 |:---:|:---:|:---:|:---:|:---:|
 |[3DDFA 16](https://arxiv.org/abs/1511.07212)</center>|3.78|4.54|7.93|5.42|
@@ -52,6 +53,7 @@ Our method aligns reconstruction faces with input images. It provides face pose 
 |[Bulat et al. 17](https://arxiv.org/abs/1703.00862)|**2.47**|**3.01**|**4.31**|**3.26**|
 |[PRN 18](https://arxiv.org/abs/1803.07835)|2.75|3.51|4.61|3.62|
 |Ours|2.56|3.11|4.45|3.37|
+</p>
 
 ### ● Easy and Fast
 Faces are represented with Basel Face Model 2009, which is easy for further manipulations (e.g expression transfer). ResNet-50 is used as backbone network to achieve over 50 fps (on GTX 1080) for reconstructions.
@@ -63,9 +65,9 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - Reconstructions can be done on both Windows and Linux. However, we suggest running on Linux because the rendering process is only supported on Linux currently. If you wish to run on Windows, you have to comment out the rendering part. 
 - Python >= 3.5 (numpy, scipy, pillow, opencv).
 - Tensorflow 1.4 ~ 1.12.
-- [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). Our method depends on BFM09 to reconstruct 3D faces from regressed coefficients.
+- [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). 
 - [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace). The original BFM09 model does not handle expression variations so extra expression basis are needed. 
-- [tf mesh renderer](https://github.com/google/tf_mesh_renderer). Install the library via ```pip install mesh_renderer```. Or you can follow the instruction of tf mesh render to install it using Bazel.  Note that current rendering tool does not support tensorflow version higher than 1.13 and can only be used on Linux.
+- [tf mesh renderer](https://github.com/google/tf_mesh_renderer).  We use the library to render reconstruction images. Install the library via ```pip install mesh_renderer```. Or you can follow the instruction of tf mesh render to install it using Bazel.  Note that current rendering tool does not support tensorflow version higher than 1.13 and can only be used on Linux.
 ### Usage ###
 
 1. Clone the repository 
@@ -100,14 +102,12 @@ python demo.py
 	- "xxx_mesh.obj" : 3D face mesh in the world coordinate (best viewed in MeshLab).
 
 ### Latest Update (2020.4) ###
-The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy for face reconstruction. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
+The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
 
 ### Cautions ###
 
-1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of an average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Note that these detectors may return wrong landmarks under large poses which could influence the alignment result. We recommend using [Howfar](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks with semantic consistency for large pose images. We also put some examples in the ./input subfolder for reference.
-<p align="center"> 
-<img src="/images/lm5p.png" width="150">     <img src="/images/lm3d.png" width="190">
-</p>
+1. The model is trained without position augmentation so that a pre-alignment with 5 facial landmarks is necessary. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of the BFM09 average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). However, these traditional 2D detectors may return wrong landmarks under large poses which could influence the alignment result. Therefore, we recommend using [Howfar](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks with semantic consistency for large pose images. We also put some examples in the ./input subfolder for reference.
+
 
 2. We assume a [pinhole camera model](https://en.wikipedia.org/wiki/Pinhole_camera_model) for face projection. The camera is positioned at (0,0,10) (dm) in the world coordinate and points to the negative z axis. We set the camera focal to 1015 empirically and fix it during training and inference time. Faces in canonical views are at the origin of the world coordinate and facing the positive z axis. Rotations and translations predicted by the R-Net are all with respect to the world coordinate.
 <p align="center"> 
