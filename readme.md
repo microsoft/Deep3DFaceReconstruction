@@ -45,7 +45,6 @@ Our method aligns reconstruction faces with input images. It provides face pose 
 <img src="/images/alignment.png">
 </p>
 
-<p align="center">
 |Method|[0°,30°]|[30°,60°]|[60°,90°]|Overall|
 |:---:|:---:|:---:|:---:|:---:|
 |[3DDFA 16](https://arxiv.org/abs/1511.07212)</center>|3.78|4.54|7.93|5.42|
@@ -53,7 +52,7 @@ Our method aligns reconstruction faces with input images. It provides face pose 
 |[Bulat et al. 17](https://arxiv.org/abs/1703.00862)|**2.47**|**3.01**|**4.31**|**3.26**|
 |[PRN 18](https://arxiv.org/abs/1803.07835)|2.75|3.51|4.61|3.62|
 |Ours|2.56|3.11|4.45|3.37|
-</p>
+
 
 ### ● Easy and Fast
 Faces are represented with Basel Face Model 2009, which is easy for further manipulations (e.g expression transfer). ResNet-50 is used as backbone network to achieve over 50 fps (on GTX 1080) for reconstructions.
