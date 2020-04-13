@@ -116,7 +116,8 @@ The face reconstruction process is totally transferred to tensorflow version whi
 3. The current model is trained under the assumption of 3-channel scene illumination instead of white light described in the paper. As a result, the gamma coefficient that controls lighting has a dimension of 27 instead of 9. 
 
 4. We excluded ear and neck region of original BFM09 to allow the network concentrate on the face region. To see which vertices in the original model are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
-5. Our model may give inferior results for selfies that often have severe distortions of face geometry. In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in training data.
+
+5. Our model may give inferior results for selfies that often have severe perspetive distortions. In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in training data.
   
 5. If you have any further questions, please contact Yu Deng (t-yudeng@microsoft.com) and Jiaolong Yang (jiaoyan@microsoft.com).
 
