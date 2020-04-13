@@ -117,7 +117,7 @@ The face reconstruction process is totally transferred to tensorflow version whi
 
 4. We excluded ear and neck region of original BFM09 to allow the network concentrate on the face region. To see which vertices in the original model are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
 
-5. Our model may give inferior results for images with perspetive distortions (e.g., some selfies). In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in training data.
+5. Our model may give inferior results for images with severe perspetive distortions (e.g., some selfies). In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in training data.
   
 5. If you have any further questions, please contact Yu Deng (t-yudeng@microsoft.com) and Jiaolong Yang (jiaoyan@microsoft.com).
 
