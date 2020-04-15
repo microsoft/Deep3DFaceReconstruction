@@ -26,6 +26,7 @@ The method reconstructs faces with high accuracy. Quantitative evaluations (shap
 |[PRN 18](https://arxiv.org/abs/1803.07835)|-|-|1.86±0.47|
 |Ours|**1.81±0.50**|**1.67±0.50**|**1.40±0.31**|
 
+(Please refer to our paper for more details about these results)
 
 ### ● High fidelity textures
 The method produces high fidelity face textures meanwhile preserves identity information of input images. Scene illumination is also disentangled to generate a pure albedo.
