@@ -113,7 +113,7 @@ The face reconstruction process is totally transferred to tensorflow version whi
 <img src="/images/camera.png" width="300">
 </p>
 
-3. The current model is trained under the assumption of 3-channel scene illumination instead of white light described in the paper. As a result, the gamma coefficient that controls lighting has a dimension of 27 instead of 9. 
+3. The current model is trained using 3-channel (r,g,b) scene illumination instead of white light described in the paper. As a result, the gamma coefficient that controls lighting has a dimension of 27 instead of 9. 
 
 4. We excluded ear and neck region of original BFM09 to allow the network concentrate on the face region. To see which vertices in the original model are preserved, check select_vertex_id.mat in the ./BFM subfolder. Note that index starts from 1.
 
