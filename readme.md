@@ -136,3 +136,5 @@ Please cite the following paper if this model helps your research:
 	    booktitle={IEEE Computer Vision and Pattern Recognition Workshops},
 	    year={2019}
 	}
+##
+The face images on this page are from the public [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset released by MMLab, CUHK.
