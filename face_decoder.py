@@ -1,8 +1,14 @@
 import tensorflow as tf 
 import math as m
 import numpy as np
-import mesh_renderer
 from scipy.io import loadmat
+import platform, PIL
+
+is_windows = platform.system() == "Windows"
+
+if not is_windows:
+	import mesh_renderer
+
 ###############################################################################################
 # Reconstruct 3D face based on output coefficients and facemodel
 ###############################################################################################
@@ -56,10 +62,13 @@ class Face3D():
 		self.face_color = face_color
 
 		# reconstruction images
-		render_imgs = self.Render_block(face_shape_t,norm_r,face_color,self.facemodel,batchsize)
-		render_imgs = tf.clip_by_value(render_imgs,0,255)
-		render_imgs = tf.cast(render_imgs,tf.float32) 
-		self.render_imgs = render_imgs
+		if not is_windows:
+			render_imgs = self.Render_block(face_shape_t,norm_r,face_color,self.facemodel,batchsize)
+			render_imgs = tf.clip_by_value(render_imgs,0,255)
+			render_imgs = tf.cast(render_imgs,tf.float32) 
+			self.render_imgs = render_imgs
+		else:
+			self.render_imgs = []
 
 	######################################################################################################
 	def Split_coeff(self,coeff):
@@ -272,23 +281,27 @@ class Face3D():
 		far_clip = 50*tf.ones([batchsize])
 		#using tf_mesh_renderer for rasterization (https://github.com/google/tf_mesh_renderer)
 		# img: [batchsize,224,224,4] images in RGBA order (0-255)
-		with tf.device('/cpu:0'):
-			img = mesh_renderer.mesh_renderer(face_shape,
-				tf.cast(facemodel.face_buf-1,tf.int32),
-				face_norm,
-				face_color,
-				camera_position = camera_position,
-				camera_lookat = camera_lookat,
-				camera_up = camera_up,
-				light_positions = light_positions,
-				light_intensities = light_intensities,
-				image_width = 224,
-				image_height = 224,
-				fov_y = fov_y, #12.5936
-				ambient_color = ambient_color,
-				near_clip = near_clip,
-				far_clip = far_clip)
-
-		return img
+		
+		if not is_windows:
+			with tf.device('/cpu:0'):
+				img = mesh_renderer.mesh_renderer(face_shape,
+					tf.cast(facemodel.face_buf-1,tf.int32),
+					face_norm,
+					face_color,
+					camera_position = camera_position,
+					camera_lookat = camera_lookat,
+					camera_up = camera_up,
+					light_positions = light_positions,
+					light_intensities = light_intensities,
+					image_width = 224,
+					image_height = 224,
+					fov_y = fov_y, #12.5936
+					ambient_color = ambient_color,
+					near_clip = near_clip,
+					far_clip = far_clip)
+			return img
+		else:
+			#return PIL.Image.new('RGB', (224, 224))
+			return np.zeros([224, 224], dtype=np.int32)
 
 
