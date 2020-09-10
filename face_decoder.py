@@ -2,7 +2,7 @@ import tensorflow as tf
 import math as m
 import numpy as np
 from scipy.io import loadmat
-import platform, PIL
+import platform
 
 is_windows = platform.system() == "Windows"
 
@@ -301,7 +301,6 @@ class Face3D():
 					far_clip = far_clip)
 			return img
 		else:
-			#return PIL.Image.new('RGB', (224, 224))
 			return np.zeros([224, 224], dtype=np.int32)
 
 
