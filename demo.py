@@ -1,14 +1,17 @@
 import tensorflow as tf 
 import numpy as np
-import cv2
 from PIL import Image
 import os
 import glob
+import cv2
+import platform
 from scipy.io import loadmat,savemat
 
 from preprocess_img import Preprocess
 from load_data import *
 from face_decoder import Face3D
+
+is_windows = platform.system() == "Windows"
 
 def load_graph(graph_filename):
 	with tf.gfile.GFile(graph_filename,'rb') as f:
@@ -77,11 +80,13 @@ def demo():
 				face_texture_ = np.squeeze(face_texture_, (0))
 				face_color_ = np.squeeze(face_color_, (0))
 				landmarks_2d_ = np.squeeze(landmarks_2d_, (0))
-				recon_img_ = np.squeeze(recon_img_, (0))
+				if not is_windows:
+					recon_img_ = np.squeeze(recon_img_, (0))
 
 				# save output files
-				savemat(os.path.join(save_path,file.split(os.path.sep)[-1].replace('.png','.mat').replace('jpg','mat')),{'cropped_img':input_img[:,:,::-1],'recon_img':recon_img_,'coeff':coeff_,\
-					'face_shape':face_shape_,'face_texture':face_texture_,'face_color':face_color_,'lm_68p':landmarks_2d_,'lm_5p':lm_new})
+				if not is_windows:
+					savemat(os.path.join(save_path,file.split(os.path.sep)[-1].replace('.png','.mat').replace('jpg','mat')),{'cropped_img':input_img[:,:,::-1],'recon_img':recon_img_,'coeff':coeff_,\
+						'face_shape':face_shape_,'face_texture':face_texture_,'face_color':face_color_,'lm_68p':landmarks_2d_,'lm_5p':lm_new})
 				save_obj(os.path.join(save_path,file.split(os.path.sep)[-1].replace('.png','_mesh.obj').replace('jpg','_mesh.obj')),face_shape_,tri_,np.clip(face_color_,0,255)/255) # 3D reconstruction face (in canonical view)
 
 if __name__ == '__main__':
