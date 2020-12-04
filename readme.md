@@ -151,11 +151,15 @@ python demo.py --use_pb 0 --pretrain_weights <custom_weights>.ckpt
 ```
 Training a model with a batchsize of 16 and 200K iterations takes 20 hours on a single Tesla M40 GPU.
 
-### Latest Update (2020.4) ###
+## Latest Update
+
+### (2020.4) ###
 The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
-### Latest Update (2020.6) ###
+### (2020.6) ###
 Upload a [pre-trained model](https://drive.google.com/file/d/1fPsvLKghlCK8rknb9GPiKwIq9HIqWWwV/view?usp=sharing) with white light assumption as described in the paper.
 
+### (2020.12) ###
+Upload the training code for single image face reconstruction.
 
 ### Note: ###
 
