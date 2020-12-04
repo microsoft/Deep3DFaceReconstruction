@@ -62,7 +62,7 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 ## Getting Started
 ### Testing Requirements ###
 
-- Reconstructions can be done on both Windows and Linux. However, we suggest running on Linux because the rendering process is only supported on Linux. Training is only supported on Linux.
+- Reconstructions can be done on both Windows and Linux. However, we suggest running on Linux because the rendering process is only supported on Linux.
 - Python 3.6 (numpy, scipy, pillow, argparse).
 - Tensorflow 1.12.
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). 
@@ -106,7 +106,7 @@ python demo.py
 
 ### Training requirements ###
 
-- To train new model from scratch, more requirements are needed on top of the requirements listed in the testing stage.
+- Training is only supported on Linux. To train new model from scratch, more requirements are needed on top of the requirements listed in the testing stage.
 - [Facenet](https://github.com/davidsandberg/facenet) provided by 
 Sandberg et al.. In our paper, we use a face recognition network trained with in-house face data which cannot be made publicly available due to the company policies. To make our work reproducible, we recommend using this alternative face recognition model. We use the version [20170512-110547](https://github.com/davidsandberg/facenet/blob/529c3b0b5fc8da4e0f48d2818906120f2e5687e6/README.md) trained on MS-Celeb-1M. Training process has been tested with the new model to ensure a comparable result.
 - [Resnet50-v1](https://github.com/tensorflow/models/blob/master/research/slim/README.md) pre-trained on ImageNet from Tensorflow Slim. We use the version resnet_v1_50_2016_08_28.tar.gz as an initialization of the face reconstruction network.
