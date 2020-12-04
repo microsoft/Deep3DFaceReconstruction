@@ -15,6 +15,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 # training data and validation data
 def parse_args():
+    desc = "Deep3DFaceReconstruction"
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--data_path', type=str, default='./processed_data', help='training data folder')
