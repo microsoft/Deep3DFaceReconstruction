@@ -16,6 +16,7 @@ is_windows = platform.system() == "Windows"
 
 def parse_args():
 
+    desc = "Deep3DFaceReconstruction"
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--pretrain_weights', type=str, default=None, help='path for pre-trained model')
