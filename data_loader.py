@@ -3,7 +3,6 @@ from tensorflow.contrib.data import prefetch_to_device, shuffle_and_repeat, map_
 import os
 import glob
 import numpy as np
-import cv2
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = '2'
 ###############################################################################################
 # data loader for training stage

@@ -15,11 +15,11 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 # training data and validation data
 def parse_args():
-    desc = "Data preprocessing for Deep3DRecon."
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--data_path', type=str, default='./processed_data', help='training data folder')
     parser.add_argument('--val_data_path', type=str, default='./processed_data', help='validation data folder')
+    parser.add_argument('--model_name', type=str, default='./model_test', help='model name')
 
 
     return parser.parse_args()
@@ -74,6 +74,7 @@ def train():
 		opt = Option()
 		opt.data_path = [args.data_path]
 		opt.val_data_path = [args.val_data_path]
+		opt.model_name = args.model_name
 
 		# load training data into queue
 		train_iterator = load_dataset(opt)

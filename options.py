@@ -8,7 +8,7 @@ class Option():
 	def __init__(self):
 		#--------------------------------------------------------------------------------------
 		self.model_dir = 'result'
-		self.model_name = 'model_test2'
+		self.model_name = 'model_test'
 		self.data_path = ['./processed_data']
 		self.val_data_path = ['./processed_data']
 
@@ -56,5 +56,4 @@ class Option():
 		# initial weights for resnet and facenet
 		self.R_net_weights = os.path.join('./weights/resnet','resnet_v1_50.ckpt')
 		self.Perceptual_net_weights = './weights/id_net/model-20170512-110547.ckpt-250000'
-
-		self.pretrain_weights = os.path.join('train/model_test2','iter_100000.ckpt')
+		self.pretrain_weights = os.path.join('train/model_test','iter_100000.ckpt')

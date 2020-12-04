@@ -3,8 +3,8 @@ import numpy as np
 from PIL import Image
 import os
 import glob
-import cv2
 import platform
+import argparse
 from scipy.io import loadmat,savemat
 
 from preprocess_img import align_img
@@ -13,6 +13,15 @@ from face_decoder import Face3D
 from options import Option
 
 is_windows = platform.system() == "Windows"
+
+def parse_args():
+
+    parser = argparse.ArgumentParser(description=desc)
+
+    parser.add_argument('--pretrain_weights', type=str, default=None, help='path for pre-trained model')
+    parser.add_argument('--use_pb', type=int, default=1, help='validation data folder')
+
+    return parser.parse_args()
 
 def restore_weights(sess,opt):
 	var_list = tf.trainable_variables()
@@ -29,6 +38,8 @@ def restore_weights(sess,opt):
 
 def demo():
 	# input and output folder
+	args = parse_args()
+
 	image_path = 'input'
 	save_path = 'output'	
 	if not os.path.exists(save_path):
@@ -51,19 +62,18 @@ def demo():
 		opt = Option()
 		opt.batch_size = 1
 		opt.is_train = False
+		opt.pretrain_weights = args.pretrain_weights
 		FaceReconstructor = Face3D()
 		images = tf.placeholder(name = 'input_imgs', shape = [opt.batch_size,224,224,3], dtype = tf.float32)
 
-		if opt.use_pb and os.path.isfile('network/FaceReconModel.pb'):
+		if args.use_pb and os.path.isfile('network/FaceReconModel.pb'):
 			print('Using pre-trained .pb file.')
-			use_pb = True
 			graph_def = load_graph('network/FaceReconModel.pb')
 			tf.import_graph_def(graph_def,name='resnet',input_map={'input_imgs:0': images})
 			# output coefficients of R-Net (dim = 257) 
 			coeff = graph.get_tensor_by_name('resnet/coeff:0')
 		else:
 			print('Using pre-trained .ckpt file: %s'%opt.pretrain_weights)
-			use_pb = False
 			import networks
 			coeff = networks.R_Net(images,is_training=False)
 
@@ -78,7 +88,7 @@ def demo():
 
 
 		with tf.Session() as sess:
-			if not use_pb:
+			if not args.use_pb :
 				restore_weights(sess,opt)
 
 			print('reconstructing...')
