@@ -7,40 +7,42 @@ import platform
 is_windows = platform.system() == "Windows"
 
 if not is_windows:
-	import mesh_renderer
-
+	from renderer import mesh_renderer
 ###############################################################################################
 # Reconstruct 3D face based on output coefficients and facemodel
 ###############################################################################################
 
 # BFM 3D face model
 class BFM():
-	def __init__(self,model_path = 'BFM/BFM_model_front.mat'):
+	def __init__(self,model_path = './BFM/BFM_model_front.mat'):
 		model = loadmat(model_path)
 		self.meanshape = tf.constant(model['meanshape']) # mean face shape. [3*N,1]
 		self.idBase = tf.constant(model['idBase']) # identity basis. [3*N,80]
 		self.exBase = tf.constant(model['exBase'].astype(np.float32)) # expression basis. [3*N,64]
 		self.meantex = tf.constant(model['meantex']) # mean face texture. [3*N,1] (0-255)
 		self.texBase = tf.constant(model['texBase']) # texture basis. [3*N,80]
-		self.point_buf = tf.constant(model['point_buf']) # triangle indices for each vertex that lies in. starts from 1. [N,8]
-		self.face_buf = tf.constant(model['tri']) # vertex indices in each triangle. starts from 1. [F,3]
-		self.keypoints = tf.squeeze(tf.constant(model['keypoints'])) # vertex indices of 68 facial landmarks. starts from 1. [68,1]
+		self.point_buf = tf.constant(model['point_buf']) # face indices for each vertex that lies in. starts from 1. [N,8]
+		self.face_buf = tf.constant(model['tri']) # vertex indices for each face. starts from 1. [F,3]
+		self.front_mask_render = tf.squeeze(tf.constant(model['frontmask2_idx'])) # vertex indices for small face region to compute photometric error. starts from 1.
+		self.mask_face_buf = tf.constant(model['tri_mask2']) # vertex indices for each face from small face region. starts from 1. [f,3]
+		self.skin_mask = tf.squeeze(tf.constant(model['skinmask'])) # vertex indices for pre-defined skin region to compute reflectance loss
+		self.keypoints = tf.squeeze(tf.constant(model['keypoints'])) # vertex indices for 68 landmarks. starts from 1. [68,1]
 
-# Analytic 3D face reconstructor
+# Analytic 3D face
 class Face3D():
 	def __init__(self):
 		facemodel = BFM()
 		self.facemodel = facemodel
 
 	# analytic 3D face reconstructions with coefficients from R-Net
-	def Reconstruction_Block(self,coeff,batchsize):
+	def Reconstruction_Block(self,coeff,opt):
 		#coeff: [batchsize,257] reconstruction coefficients
-		id_coeff,ex_coeff,tex_coeff,angles,translation,gamma = self.Split_coeff(coeff)
+
+		id_coeff,ex_coeff,tex_coeff,angles,translation,gamma,camera_scale,f_scale = self.Split_coeff(coeff)
 		# [batchsize,N,3] canonical face shape in BFM space
 		face_shape = self.Shape_formation_block(id_coeff,ex_coeff,self.facemodel)
 		# [batchsize,N,3] vertex texture (in RGB order)
 		face_texture = self.Texture_formation_block(tex_coeff,self.facemodel)
-		self.face_texture = face_texture
 		# [batchsize,3,3] rotation matrix for face shape
 		rotation = self.Compute_rotation_matrix(angles)
 		# [batchsize,N,3] vertex normal
@@ -49,38 +51,44 @@ class Face3D():
 
 		# do rigid transformation for face shape using predicted rotation and translation
 		face_shape_t = self.Rigid_transform_block(face_shape,rotation,translation)
-		self.face_shape_t = face_shape_t
 		# compute 2d landmark projections 
 		# landmark_p: [batchsize,68,2]	
 		face_landmark_t = self.Compute_landmark(face_shape_t,self.facemodel)
-		landmark_p = self.Projection_block(face_landmark_t)   # 256*256 image
-		landmark_p = tf.stack([landmark_p[:,:,0],223. - landmark_p[:,:,1]],axis = 2)
-		self.landmark_p = landmark_p
+		landmark_p = self.Projection_block(face_landmark_t,camera_scale,f_scale)
 
 		# [batchsize,N,3] vertex color (in RGB order)
 		face_color = self.Illumination_block(face_texture, norm_r, gamma)
+
+		# reconstruction images and region masks for computing photometric loss		
+		render_imgs,img_mask,img_mask_crop = self.Render_block(face_shape_t,norm_r,face_color,camera_scale,f_scale,self.facemodel,opt.batch_size,opt.is_train)
+
+		self.id_coeff = id_coeff
+		self.ex_coeff = ex_coeff
+		self.tex_coeff = tex_coeff
+		self.f_scale = f_scale
+		self.gamma = gamma
+		self.face_shape = face_shape
+		self.face_shape_t = face_shape_t
+		self.face_texture = face_texture
 		self.face_color = face_color
+		self.landmark_p = landmark_p
+		self.render_imgs = render_imgs
+		self.img_mask = img_mask
+		self.img_mask_crop = img_mask_crop
 
-		# reconstruction images
-		if not is_windows:
-			render_imgs = self.Render_block(face_shape_t,norm_r,face_color,self.facemodel,batchsize)
-			render_imgs = tf.clip_by_value(render_imgs,0,255)
-			render_imgs = tf.cast(render_imgs,tf.float32) 
-			self.render_imgs = render_imgs
-		else:
-			self.render_imgs = []
-
-	######################################################################################################
+	#----------------------------------------------------------------------------------------------
 	def Split_coeff(self,coeff):
 
-		id_coeff = coeff[:,:80] #identity
-		ex_coeff = coeff[:,80:144] #expression
-		tex_coeff = coeff[:,144:224] #texture
-		angles = coeff[:,224:227] #euler angles for pose
-		gamma = coeff[:,227:254] #lighting
-		translation = coeff[:,254:257] #translation
-		
-		return id_coeff,ex_coeff,tex_coeff,angles,translation,gamma
+		id_coeff = coeff[:,:80]
+		ex_coeff = coeff[:,80:144]
+		tex_coeff = coeff[:,144:224]
+		angles = coeff[:,224:227]
+		gamma = coeff[:,227:254]
+		translation = coeff[:,254:257]
+		camera_scale = tf.ones([tf.shape(coeff)[0],1])
+		f_scale = tf.ones([tf.shape(coeff)[0],1])
+
+		return id_coeff,ex_coeff,tex_coeff,angles,translation,gamma,camera_scale,f_scale
 
 	def Shape_formation_block(self,id_coeff,ex_coeff,facemodel):
 		face_shape = tf.einsum('ij,aj->ai',facemodel.idBase,id_coeff) + \
@@ -170,31 +178,27 @@ class Face3D():
 		# R = RzRyRx
 		rotation = tf.matmul(tf.matmul(rotation_Z,rotation_Y),rotation_X)
 
-		# because our face shape is N*3, so compute the transpose of R, so that rotation shapes can be calculated as face_shape*R 
 		rotation = tf.transpose(rotation, perm = [0,2,1])
 
 		return rotation
 
-	def Projection_block(self,face_shape,focal=1015.0,half_image_width=112.):
+	def Projection_block(self,face_shape,camera_scale,f_scale):
 
 		# pre-defined camera focal for pespective projection
-		focal = tf.constant(focal)
-		# focal = tf.constant(400.0)
+		focal = tf.constant(1015.0)
+		focal = focal*f_scale
 		focal = tf.reshape(focal,[-1,1])
-		batchsize = tf.shape(face_shape)[0]
-		# center = tf.constant(112.0)
+		batchsize = tf.shape(focal)[0]
 
 		# define camera position
-		camera_pos = tf.reshape(tf.constant([0.0,0.0,10.0]),[1,1,3])
+		camera_pos = tf.reshape(tf.constant([0.0,0.0,10.0]),[1,1,3])*tf.reshape(camera_scale,[-1,1,1])
+		reverse_z = tf.tile(tf.reshape(tf.constant([1.0,0,0,0,1,0,0,0,-1.0]),[1,3,3]),[tf.shape(face_shape)[0],1,1])
 
 		# compute projection matrix
-		p_matrix = tf.concat([focal*tf.ones([batchsize,1]),tf.zeros([batchsize,1]),half_image_width*tf.ones([batchsize,1]),tf.zeros([batchsize,1]),\
-			focal*tf.ones([batchsize,1]),half_image_width*tf.ones([batchsize,1]),tf.zeros([batchsize,2]),tf.ones([batchsize,1])],axis = 1)
-		# p_matrix = tf.tile(tf.reshape(p_matrix,[1,3,3]),[tf.shape(face_shape)[0],1,1])
+		p_matrix = tf.concat([focal,tf.zeros([batchsize,1]),112.*tf.ones([batchsize,1]),tf.zeros([batchsize,1]),focal,112.*tf.ones([batchsize,1]),tf.zeros([batchsize,2]),tf.ones([batchsize,1])],axis = 1)
 		p_matrix = tf.reshape(p_matrix,[-1,3,3])
 
-		# convert z in canonical space to the distance to camera
-		reverse_z = tf.tile(tf.reshape(tf.constant([1.0,0,0,0,1,0,0,0,-1.0]),[1,3,3]),[tf.shape(face_shape)[0],1,1])
+		# convert z in world space to the distance to camera
 		face_shape = tf.matmul(face_shape,reverse_z) + camera_pos
 		aug_projection = tf.matmul(face_shape,tf.transpose(p_matrix,[0,2,1]))
 
@@ -256,51 +260,84 @@ class Face3D():
 
 		return face_shape_t
 
-	def Render_block(self,face_shape,face_norm,face_color,facemodel,batchsize):
+	def Render_block(self,face_shape,face_norm,face_color,camera_scale,f_scale,facemodel,batchsize,is_train=True):
+		if is_train and is_windows:
+			raise ValueError('Not support training with Windows environment.')
+
+		if is_windows:
+			return [],[],[]
+
 		# render reconstruction images 
 		n_vex = int(facemodel.idBase.shape[0].value/3)
-		fov_y = 2*tf.atan(112/(1015.))*180./m.pi + tf.zeros([batchsize])
-
+		fov_y = 2*tf.atan(112./(1015.*f_scale))*180./m.pi
+		fov_y = tf.reshape(fov_y,[batchsize])
 		# full face region
 		face_shape = tf.reshape(face_shape,[batchsize,n_vex,3])
 		face_norm = tf.reshape(face_norm,[batchsize,n_vex,3])
 		face_color = tf.reshape(face_color,[batchsize,n_vex,3])
 
-		#cammera settings
-		# same as in Projection_block
-		camera_position = tf.constant([[0,0,10.0]]) + tf.zeros([batchsize,3])
-		camera_lookat = tf.constant([[0,0,0.0]]) + tf.zeros([batchsize,3])
-		camera_up = tf.constant([[0,1.0,0]]) + tf.zeros([batchsize,3])
+		# pre-defined cropped face region
+		mask_face_shape = tf.gather(face_shape,tf.cast(facemodel.front_mask_render-1,tf.int32),axis = 1)
+		mask_face_norm = tf.gather(face_norm,tf.cast(facemodel.front_mask_render-1,tf.int32),axis = 1)
+		mask_face_color = tf.gather(face_color,tf.cast(facemodel.front_mask_render-1,tf.int32),axis = 1)
 
-		# setting light source position(intensities are set to 0 because we have already computed the vertex color)
-		light_positions = tf.reshape(tf.constant([0,0,1e5]),[1,1,3]) + tf.zeros([batchsize,1,3])
-		light_intensities = tf.reshape(tf.constant([0.0,0.0,0.0]),[1,1,3])+tf.zeros([batchsize,1,3])
-		ambient_color = tf.reshape(tf.constant([1.0,1,1]),[1,3])+ tf.zeros([batchsize,3])
+		# setting cammera settings
+		camera_position = tf.constant([[0,0,10.0]])*tf.reshape(camera_scale,[-1,1])
+		camera_lookat = tf.constant([0,0,0.0])
+		camera_up = tf.constant([0,1.0,0])
 
-		near_clip = 0.01*tf.ones([batchsize])
-		far_clip = 50*tf.ones([batchsize])
+		# setting light source position(intensities are set to 0 because we have computed the vertex color)
+		light_positions = tf.tile(tf.reshape(tf.constant([0,0,1e5]),[1,1,3]),[batchsize,1,1])
+		light_intensities = tf.tile(tf.reshape(tf.constant([0.0,0.0,0.0]),[1,1,3]),[batchsize,1,1])
+		ambient_color = tf.tile(tf.reshape(tf.constant([1.0,1,1]),[1,3]),[batchsize,1])
+
 		#using tf_mesh_renderer for rasterization (https://github.com/google/tf_mesh_renderer)
-		# img: [batchsize,224,224,4] images in RGBA order (0-255)
-		
-		if not is_windows:
-			with tf.device('/cpu:0'):
-				img = mesh_renderer.mesh_renderer(face_shape,
-					tf.cast(facemodel.face_buf-1,tf.int32),
-					face_norm,
-					face_color,
-					camera_position = camera_position,
-					camera_lookat = camera_lookat,
-					camera_up = camera_up,
-					light_positions = light_positions,
-					light_intensities = light_intensities,
-					image_width = 224,
-					image_height = 224,
-					fov_y = fov_y, #12.5936
-					ambient_color = ambient_color,
-					near_clip = near_clip,
-					far_clip = far_clip)
-			return img
-		else:
-			return np.zeros([224, 224], dtype=np.int32)
+		# img: [batchsize,224,224,3] images in RGB order (0-255)
+		# mask:[batchsize,224,224,1] transparency for img ({0,1} value)
+		img_rgba = mesh_renderer.mesh_renderer(face_shape,
+			tf.cast(facemodel.face_buf-1,tf.int32),
+			face_norm,
+			face_color,
+			camera_position = camera_position,
+			camera_lookat = camera_lookat,
+			camera_up = camera_up,
+			light_positions = light_positions,
+			light_intensities = light_intensities,
+			image_width = 224,
+			image_height = 224,
+			fov_y = fov_y,
+			near_clip = 0.01,
+			far_clip = 50.0,
+			ambient_color = ambient_color)
 
+		img = img_rgba[:,:,:,:3]
+		mask = img_rgba[:,:,:,3:]
 
+		img = tf.cast(img[:,:,:,::-1],tf.float32) #transfer RGB to BGR
+		mask = tf.cast(mask,tf.float32) # full face region
+
+		if is_train:
+			# compute mask for small face region
+			img_crop_rgba = mesh_renderer.mesh_renderer(mask_face_shape,
+				tf.cast(facemodel.mask_face_buf-1,tf.int32),
+				mask_face_norm,
+				mask_face_color,
+				camera_position = camera_position,
+				camera_lookat = camera_lookat,
+				camera_up = camera_up,
+				light_positions = light_positions,
+				light_intensities = light_intensities,
+				image_width = 224,
+				image_height = 224,
+				fov_y = fov_y,
+				near_clip = 0.01,
+				far_clip = 50.0,
+				ambient_color = ambient_color)
+
+			mask_f = img_crop_rgba[:,:,:,3:]
+			mask_f = tf.cast(mask_f,tf.float32) # small face region
+			return img,mask,mask_f
+
+		img_rgba = tf.cast(tf.clip_by_value(img_rgba,0,255),tf.float32)
+
+		return img_rgba,mask,mask

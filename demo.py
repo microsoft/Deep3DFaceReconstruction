@@ -7,18 +7,25 @@ import cv2
 import platform
 from scipy.io import loadmat,savemat
 
-from preprocess_img import Preprocess
-from load_data import *
+from preprocess_img import align_img
+from utils import *
 from face_decoder import Face3D
+from options import Option
 
 is_windows = platform.system() == "Windows"
 
-def load_graph(graph_filename):
-	with tf.gfile.GFile(graph_filename,'rb') as f:
-		graph_def = tf.GraphDef()
-		graph_def.ParseFromString(f.read())
+def restore_weights(sess,opt):
+	var_list = tf.trainable_variables()
+	g_list = tf.global_variables()
 
-	return graph_def
+	# add batch normalization params into trainable variables 
+	bn_moving_vars = [g for g in g_list if 'moving_mean' in g.name]
+	bn_moving_vars += [g for g in g_list if 'moving_variance' in g.name]
+	var_list +=bn_moving_vars
+
+	# create saver to save and restore weights
+	saver = tf.train.Saver(var_list = var_list)
+	saver.restore(sess,opt.pretrain_weights)
 
 def demo():
 	# input and output folder
@@ -36,22 +43,32 @@ def demo():
 
 	# read standard landmarks for preprocessing images
 	lm3D = load_lm3d()
-	batchsize = 1
 	n = 0
 
 	# build reconstruction model
 	with tf.Graph().as_default() as graph,tf.device('/cpu:0'):
 
+		opt = Option()
+		opt.batch_size = 1
+		opt.is_train = False
 		FaceReconstructor = Face3D()
-		images = tf.placeholder(name = 'input_imgs', shape = [batchsize,224,224,3], dtype = tf.float32)
-		graph_def = load_graph('network/FaceReconModel.pb')
-		tf.import_graph_def(graph_def,name='resnet',input_map={'input_imgs:0': images})
+		images = tf.placeholder(name = 'input_imgs', shape = [opt.batch_size,224,224,3], dtype = tf.float32)
 
-		# output coefficients of R-Net (dim = 257) 
-		coeff = graph.get_tensor_by_name('resnet/coeff:0')
+		if opt.use_pb and os.path.isfile('network/FaceReconModel.pb'):
+			print('Using pre-trained .pb file.')
+			use_pb = True
+			graph_def = load_graph('network/FaceReconModel.pb')
+			tf.import_graph_def(graph_def,name='resnet',input_map={'input_imgs:0': images})
+			# output coefficients of R-Net (dim = 257) 
+			coeff = graph.get_tensor_by_name('resnet/coeff:0')
+		else:
+			print('Using pre-trained .ckpt file: %s'%opt.pretrain_weights)
+			use_pb = False
+			import networks
+			coeff = networks.R_Net(images,is_training=False)
 
 		# reconstructing faces
-		FaceReconstructor.Reconstruction_Block(coeff,batchsize)
+		FaceReconstructor.Reconstruction_Block(coeff,opt)
 		face_shape = FaceReconstructor.face_shape_t
 		face_texture = FaceReconstructor.face_texture
 		face_color = FaceReconstructor.face_color
@@ -61,6 +78,9 @@ def demo():
 
 
 		with tf.Session() as sess:
+			if not use_pb:
+				restore_weights(sess,opt)
+
 			print('reconstructing...')
 			for file in img_list:
 				n += 1
@@ -68,7 +88,7 @@ def demo():
 				# load images and corresponding 5 facial landmarks
 				img,lm = load_img(file,file.replace('png','txt').replace('jpg','txt'))
 				# preprocess input image
-				input_img,lm_new,transform_params = Preprocess(img,lm,lm3D)
+				input_img,lm_new,transform_params = align_img(img,lm,lm3D)
 
 				coeff_,face_shape_,face_texture_,face_color_,landmarks_2d_,recon_img_,tri_ = sess.run([coeff,\
 					face_shape,face_texture,face_color,landmarks_2d,recon_img,tri],feed_dict = {images: input_img})
