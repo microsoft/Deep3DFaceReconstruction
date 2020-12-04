@@ -5,10 +5,13 @@ import os
 # training options
 
 class Option():
-	def __init__(self):
+	def __init__(self,model_name=None):
 		#--------------------------------------------------------------------------------------
 		self.model_dir = 'result'
-		self.model_name = 'model_test'
+		if model_name is None:
+			self.model_name = 'model_test'
+		else:
+			self.model_name = model_name
 		self.data_path = ['./processed_data']
 		self.val_data_path = ['./processed_data']
 
