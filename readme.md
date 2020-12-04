@@ -161,7 +161,7 @@ Upload a [pre-trained model](https://drive.google.com/file/d/1fPsvLKghlCK8rknb9G
 ### (2020.12) ###
 Upload the training code for single image face reconstruction.
 
-### Note: ###
+## Note
 
 1. An image pre-alignment with 5 facial landmarks is necessary before reconstruction. In our image pre-processing stage, we solve a least square problem between 5 facial landmarks on the image and 5 facial landmarks of the BFM09 average 3D face to cancel out face scales and misalignment. To get 5 facial landmarks, you can choose any open source face detector that returns them, such as [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). However, these traditional 2D detectors may return wrong landmarks under large poses which could influence the alignment result. Therefore, we recommend using [the method of Bulat et al.](https://github.com/1adrianb/2D-and-3D-face-alignment) to get facial landmarks (3D definition) with semantic consistency for large pose images. Note that our model is trained without position augmentation so that a bad alignment may lead to inaccurate reconstruction results. We put some examples in the ./input subfolder for reference.
 
