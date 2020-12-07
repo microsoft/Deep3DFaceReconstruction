@@ -119,7 +119,7 @@ Sandberg et al.. In our paper, we use a face recognition network trained with in
 3. Download the [68 landmark detector](https://drive.google.com/file/d/1KYFeTb963jg0F47sTiwqDdhBIvRlUkPa/view?usp=sharing), put the file in ./network.
 
 ### Data pre-processing ###
-1. To train our model with custom images，5 facial landmarks for each image are needed in advance for an image pre-alignment process. We recommend using [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Use these public face detectors to get 5 landmarks, and save all images and corresponding landmarks in <raw_img_path>. Note that an image and its detected landmark file should have same name.
+1. To train our model with custom images，5 facial landmarks of each image are needed in advance for an image pre-alignment process. We recommend using [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Use these public face detectors to get 5 landmarks, and save all images and corresponding landmarks in <raw_img_path>. Note that an image and its detected landmark file should have same name.
 2. Align images and generate 68 landmarks as well as skin mask for training: 
 
 ```
