@@ -60,9 +60,8 @@ def demo():
 	# build reconstruction model
 	with tf.Graph().as_default() as graph,tf.device('/cpu:0'):
 
-		opt = Option()
+		opt = Option(is_train=False)
 		opt.batch_size = 1
-		opt.is_train = False
 		opt.pretrain_weights = args.pretrain_weights
 		FaceReconstructor = Face3D()
 		images = tf.placeholder(name = 'input_imgs', shape = [opt.batch_size,224,224,3], dtype = tf.float32)
