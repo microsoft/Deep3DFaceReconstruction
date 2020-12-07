@@ -27,7 +27,7 @@ import tensorflow as tf
 #     'tf_mesh_renderer/mesh_renderer/kernels/rasterize_triangles_kernel.so'))
 
 
-rasterize_triangles_module = tf.load_op_library('./renderer/rasterize_triangles_kernel_1.so')
+rasterize_triangles_module = tf.load_op_library('./renderer/rasterize_triangles_kernel.so')
 
 
 # This epsilon should be smaller than any valid barycentric reweighting factor
