@@ -120,7 +120,7 @@ Sandberg et al.. In our paper, we use a face recognition network trained with in
 
 ### Data pre-processing ###
 1. To train our model with custom images，5 facial landmarks of each image are needed in advance for an image pre-alignment process. We recommend using [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Use these public face detectors to get 5 landmarks, and save all images and corresponding landmarks in <raw_img_path>. Note that an image and its detected landmark file should have same name.
-2. Align images and generate 68 landmarks as well as skin mask for training: 
+2. Align images and generate 68 landmarks as well as skin masks for training: 
 
 ```
 # Run following command for data pre-processing. By default, the code uses example images in ./input and saves the processed data in ./processed_data
@@ -153,12 +153,12 @@ Training a model with a batchsize of 16 and 200K iterations takes 20 hours on a 
 
 ## Latest Update
 
-### (2020.4) ###
+### 2020.4 ###
 The face reconstruction process is totally transferred to tensorflow version while the old version uses numpy. We have also integrated the rendering process into the framework. As a result, reconstruction images aligned with the input can be easily obtained without extra efforts. The whole process is tensorflow-based which allows gradient back-propagation for other tasks.
-### (2020.6) ###
+### 2020.6 ###
 Upload a [pre-trained model](https://drive.google.com/file/d/1fPsvLKghlCK8rknb9GPiKwIq9HIqWWwV/view?usp=sharing) with white light assumption as described in the paper.
 
-### (2020.12) ###
+### 2020.12 ###
 Upload the training code for single image face reconstruction.
 
 ## Note
