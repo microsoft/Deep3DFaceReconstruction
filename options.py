@@ -5,8 +5,9 @@ import os
 # training options
 
 class Option():
-	def __init__(self,model_name=None):
+	def __init__(self,model_name=None,is_train=True):
 		#--------------------------------------------------------------------------------------
+		self.is_train = is_train
 		self.model_dir = 'result'
 		if model_name is None:
 			self.model_name = 'model_test'
@@ -16,8 +17,9 @@ class Option():
 		self.val_data_path = ['./processed_data']
 
 		self.model_save_path = os.path.join(self.model_dir,self.model_name)
-		if not os.path.exists(self.model_save_path):
-			os.makedirs(self.model_save_path)
+		if self.is_train:
+			if not os.path.exists(self.model_save_path):
+				os.makedirs(self.model_save_path)
 
 		self.summary_dir = os.path.join(self.model_save_path,'summary')
 
@@ -27,7 +29,6 @@ class Option():
 		# visible gpu settings
 		self.config = tf.ConfigProto()
 		self.config.gpu_options.visible_device_list = '0'
-		self.is_train = True
 		self.use_pb = True
 		#---------------------------------------------------------------------------------------
 		# training parameters
