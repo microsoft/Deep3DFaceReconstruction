@@ -4,6 +4,7 @@
 <img src="/images/example.gif">
 </p>
 
+**_Training code is available now!_**
 
 This is a python implementation of the following paper:
 
