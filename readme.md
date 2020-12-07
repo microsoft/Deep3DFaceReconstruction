@@ -110,7 +110,7 @@ python demo.py
 - [Facenet](https://github.com/davidsandberg/facenet) provided by 
 Sandberg et al.. In our paper, we use a face recognition network trained with in-house face data which cannot be made publicly available due to the company policies. To make our work reproducible, we recommend using this alternative face recognition model. We use the version [20170512-110547](https://github.com/davidsandberg/facenet/blob/529c3b0b5fc8da4e0f48d2818906120f2e5687e6/README.md) trained on MS-Celeb-1M. Training process has been tested with the new model to ensure a comparable result.
 - [Resnet50-v1](https://github.com/tensorflow/models/blob/master/research/slim/README.md) pre-trained on ImageNet from Tensorflow Slim. We use the version resnet_v1_50_2016_08_28.tar.gz as an initialization of the face reconstruction network.
-- [68 facial landmark detector](https://drive.google.com/file/d/1KYFeTb963jg0F47sTiwqDdhBIvRlUkPa/view?usp=sharing). We use 68 facial landmarks for loss calculation during training. To make the training process reproducible, we provide a lightweight detector that produce comparable results to [the method of Bulat et al.](https://github.com/1adrianb/2D-and-3D-face-alignment). The detector is trained on [300WLP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm), [LFW](http://vis-www.cs.umass.edu/lfw/), and [LS3D-W](https://www.adrianbulat.com/face-alignment).
+- [68-facial-landmark detector](https://drive.google.com/file/d/1KYFeTb963jg0F47sTiwqDdhBIvRlUkPa/view?usp=sharing). We use 68 facial landmarks for loss calculation during training. To make the training process reproducible, we provide a lightweight detector that produce comparable results to [the method of Bulat et al.](https://github.com/1adrianb/2D-and-3D-face-alignment). The detector is trained on [300WLP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm), [LFW](http://vis-www.cs.umass.edu/lfw/), and [LS3D-W](https://www.adrianbulat.com/face-alignment).
 
 ### Training preparation ###
 
@@ -119,7 +119,7 @@ Sandberg et al.. In our paper, we use a face recognition network trained with in
 3. Download the [68 landmark detector](https://drive.google.com/file/d/1KYFeTb963jg0F47sTiwqDdhBIvRlUkPa/view?usp=sharing), put the file in ./network.
 
 ### Data pre-processing ###
-1. To train our model with custom images，5 facial landmarks for each image are needed in advance. We recommend using [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Save all images and corresponding landmarks in <raw_img_path>. Note that an image and its detected landmark file should have same name.
+1. To train our model with custom images，5 facial landmarks for each image are needed in advance for an image pre-alignment process. We recommend using [dlib](http://dlib.net/) or [MTCNN](https://github.com/ipazc/mtcnn). Use these public face detectors to get 5 landmarks, and save all images and corresponding landmarks in <raw_img_path>. Note that an image and its detected landmark file should have same name.
 2. Align images and generate 68 landmarks as well as skin mask for training: 
 
 ```
