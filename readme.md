@@ -70,7 +70,7 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - Tensorflow 1.12.
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). 
 - [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace). The original BFM09 model does not handle expression variations so extra expression basis are needed. 
-- [tf mesh renderer](https://github.com/google/tf_mesh_renderer).  We use the library to render reconstruction images. Follow the instruction of tf mesh render to install it using Bazel. Note that the rendering tool can only be used on Linux.
+- [tf mesh renderer (an older version)](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb).  We use the library to render reconstruction images. Follow the instruction of tf mesh render to install it using Bazel. Note that the rendering tool can only be used on Linux.
 
 ### Testing with pre-trained network ###
 
