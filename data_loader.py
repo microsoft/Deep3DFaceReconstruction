@@ -30,7 +30,7 @@ def _parse_function(image_path,lm_path,mask_path):
 
 def check_lm_bin(dataset,lm_path):
 	if not os.path.isdir(os.path.join(dataset,'lm_bin')):
-		os.makdirs(os.path.join(dataset,'lm_bin'))
+		os.makedirs(os.path.join(dataset,'lm_bin'))
 		for i in range(len(lm_path)):
 			lm = np.loadtxt(lm_path[i])
 			lm = np.reshape(lm,[-1])
