@@ -70,7 +70,38 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - Tensorflow 1.12.
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). 
 - [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace). The original BFM09 model does not handle expression variations so extra expression basis are needed. 
-- [tf mesh renderer (an older version)](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb).  We use the library to render reconstruction images. Follow the instruction of tf mesh render to install it using Bazel. Note that the rendering tool can only be used on Linux.
+- [tf mesh renderer (an older version)](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb).  We use the library to render reconstruction images. **Note that the rendering tool can only be used on Linux.**
+
+### Install Dependencies ###
+#### 1. Set up the python environment
+
+If you use anaconda, run the following (make sure /usr/local/cuda is link to cuda-9.0):
+```bash
+conda create -n deep3d python=3.6
+source activate deep3d
+pip install tensorflow-gpu==1.12.0
+pip install pillow argparse scipy
+```
+
+Alternatively, you can install tensorflow via conda install (no need to set cuda version in this way):
+```bash
+conda install tensorflow-gpu==1.12.0
+```
+#### 2. Compile tf_mesh_renderer
+
+If you install tensorflow using pip,  we provide a [pre-compiled binary file (rasterize_triangles_kernel.so)](https://drive.google.com/file/d/1VUtJPdg0UiJkKWxkACs8ZTf5L7Y4P9Wj/view?usp=sharing) of the library. **Note that the pre-compiled file can only be run with tensorflow 1.12.**
+
+If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile [tf_mesh_renderer](https://github.com/google/tf_mesh_renderer) with Bazel. We use its [older version](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb) because we find the latest version unstable during our training process:
+```bash
+git clone https://github.com/google/tf_mesh_renderer.git
+cd tf_mesh_renderer
+git checkout ba27ea1798
+git checkout master WORKSPACE
+bazel test ...
+```
+If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so" in ./bazel-bin/mesh_renderer/kernels. **Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.**
+
+
 
 ### Testing with pre-trained network ###
 
@@ -85,7 +116,7 @@ cd Deep3DFaceReconstruction
 
 3. Download the Expression Basis provided by [Guo et al.](https://github.com/Juyong/3DFace) You can find a link named "CoarseData" in the first row of Introduction part in their repository. Download and unzip the Coarse_Dataset.zip. Put "Exp_Pca.bin" into ./BFM subfolder. The expression basis are constructed using [Facewarehouse](kunzhou.net/zjugaps/facewarehouse/) data and transferred to BFM topology.
 
-4. Compile [tf_mesh_renderer](https://github.com/google/tf_mesh_renderer) with Bazel. We use its [older version](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb) because we find the latest version unstable during our training process. If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so". Put the .so file into ./renderer folder. For convenience, we provide a [pre-compiled file (rasterize_triangles_kernel.so)](https://drive.google.com/file/d/1VUtJPdg0UiJkKWxkACs8ZTf5L7Y4P9Wj/view?usp=sharing) of the library under tensorflow 1.12. Download the file and put it in ./renderer. **Note that the pre-compiled file can only be run with tensorflow 1.12. If you want to run the code with other versions, you have to compile tf_mesh_renderer by yourself.**
+4. Put the compiled rasterize_triangles_kernel.so into ./renderer folder.
 
 5. Download the pre-trained [reconstruction network](https://drive.google.com/file/d/176LCdUDxAj7T2awQ5knPMPawq5Q2RUWM/view?usp=sharing), unzip it and put "FaceReconModel.pb" into ./network subfolder.
 
