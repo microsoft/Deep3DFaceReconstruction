@@ -75,7 +75,7 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 ### Install Dependencies ###
 #### 1. Set up the python environment
 
-If you use anaconda, run the following (make sure /usr/local/cuda is link to cuda-9.0):
+If you use anaconda, run the following (make sure /usr/local/cuda link to cuda-9.0):
 ```bash
 conda create -n deep3d python=3.6
 source activate deep3d
