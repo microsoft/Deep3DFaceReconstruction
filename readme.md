@@ -12,8 +12,6 @@ Y. Deng, J. Yang, S. Xu, D. Chen, Y. Jia, and X. Tong, [Accurate 3D Face Reconst
 
 The method enforces a hybrid-level weakly-supervised training to for CNN-based 3D face reconstruction. It is fast, accurate, and robust to pose and occlussions. It achieves state-of-the-art performance on multiple datasets such as FaceWarehouse, MICC Florence and BU-3DFE.
 
-**_Training code is available now!_**
-
 **_Our Pytorch version re-implementation with better performance is coming soon. Please stay tuned!_**
 
 ## Features
