@@ -97,7 +97,7 @@ pip install tensorflow-gpu==1.12.0
 
 If you install tensorflow using pip,  we provide a [pre-compiled binary file (rasterize_triangles_kernel.so)](https://drive.google.com/file/d/1VUtJPdg0UiJkKWxkACs8ZTf5L7Y4P9Wj/view?usp=sharing) of the library. **Note that the pre-compiled file can only be run with tensorflow 1.12.**
 
-If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile tf_mesh_renderer with Bazel. **Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.**:
+If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile tf_mesh_renderer with Bazel. **Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation**:
 ```
 cd tf_mesh_renderer
 git checkout ba27ea1798
@@ -115,7 +115,8 @@ cp ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels/rasterize_triangles_kernel
 ```
 If you download our pre-compiled binary file, put it into ./renderer subfolder as well.
 
-Finally, replace the library path in ./renderer/rasterize_triangles.py (Line 26) with "./renderer/rasterize_triangles_kernel.so"
+Replace the library path in Line 26 in ./renderer/rasterize_triangles.py with "./renderer/rasterize_triangles_kernel.so".
+Replace "xrange" function in Line 109 in ./renderer/rasterize_triangles.py with "range" function for compatibility with python3.
 
 
 ### Testing with pre-trained network ###
