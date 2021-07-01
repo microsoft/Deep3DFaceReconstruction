@@ -109,13 +109,14 @@ If the library is compiled correctly, there should be a file named "rasterize_tr
 
 After compilation, copy corresponding files to ./renderer subfolder:
 ```
-mkdir renderer
+cd renderer
 cp ./tf_mesh_renderer/mesh_renderer/{camera_utils.py,mesh_renderer.py,rasterize_triangles.py} ./renderer/
 cp ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels/rasterize_triangles_kernel.so ./renderer/
 ```
 If you download our pre-compiled binary file, put it into ./renderer subfolder as well.
 
 Replace the library path in Line 26 in ./renderer/rasterize_triangles.py with "./renderer/rasterize_triangles_kernel.so".
+
 Replace "xrange" function in Line 109 in ./renderer/rasterize_triangles.py with "range" function for compatibility with python3.
 
 
