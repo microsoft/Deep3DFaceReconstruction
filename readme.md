@@ -14,7 +14,7 @@ The method enforces a hybrid-level weakly-supervised training to for CNN-based 3
 
 **_Training code is available now!_**
 
-**_Our Pytorch version re-implementation with better performance is coming soon. Please continue to pay attention on our update!_**
+**_Our Pytorch version re-implementation with better performance is coming soon. Please stay tuned!_**
 
 ## Features
 
