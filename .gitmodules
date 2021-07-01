@@ -1,3 +1,0 @@
-[submodule "tf_mesh_renderer"]
-	path = tf_mesh_renderer
-	url = https://github.com/google/tf_mesh_renderer
