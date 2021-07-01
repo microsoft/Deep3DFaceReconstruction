@@ -115,7 +115,7 @@ cp ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels/rasterize_triangles_kernel
 ```
 If you download our pre-compiled binary file, put it into ./renderer subfolder as well.
 
-Finally, replace the library path in ./renderer/mesh_renderer.py (Line 26) with "./renderer/rasterize_triangles_kernel.so"
+Finally, replace the library path in ./renderer/rasterize_triangles.py (Line 26) with "./renderer/rasterize_triangles_kernel.so"
 
 
 ### Testing with pre-trained network ###
