@@ -97,7 +97,7 @@ pip install tensorflow-gpu==1.12.0
 
 If you install tensorflow using pip,  we provide a [pre-compiled binary file (rasterize_triangles_kernel.so)](https://drive.google.com/file/d/1VUtJPdg0UiJkKWxkACs8ZTf5L7Y4P9Wj/view?usp=sharing) of the library. **Note that the pre-compiled file can only be run with tensorflow 1.12.**
 
-If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile tf_mesh_renderer with Bazel. We use its [older version](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb) because we find the latest version unstable during our training process:
+If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile tf_mesh_renderer with Bazel. **Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.**:
 ```
 cd tf_mesh_renderer
 git checkout ba27ea1798
@@ -105,7 +105,7 @@ git checkout master WORKSPACE
 bazel test ...
 cd ..
 ```
-**Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.** If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so" in ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels.
+If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so" in ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels. 
 
 After compilation, copy corresponding files to ./renderer subfolder:
 ```
