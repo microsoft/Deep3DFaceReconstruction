@@ -70,63 +70,69 @@ Faces are represented with Basel Face Model 2009, which is easy for further mani
 - Tensorflow 1.12.
 - [Basel Face Model 2009 (BFM09)](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-0&id=basel_face_model). 
 - [Expression Basis (transferred from Facewarehouse by Guo et al.)](https://github.com/Juyong/3DFace). The original BFM09 model does not handle expression variations so extra expression basis are needed. 
-- [tf mesh renderer (an older version)](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb).  We use the library to render reconstruction images. **Note that the rendering tool can only be used on Linux.**
+- [tf mesh renderer](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb).  We use the library to render reconstruction images. **Note that the rendering tool can only be used on Linux.**
 
-### Install Dependencies ###
-#### 1. Set up the python environment
+### Installation ###
+#### 1. Clone the repository
+```
+git clone https://github.com/Microsoft/Deep3DFaceReconstruction --recursive
+cd Deep3DFaceReconstruction
+```
 
-If you use anaconda, run the following (make sure /usr/local/cuda link to cuda-9.0):
-```bash
+#### 2. Set up the python environment
+If you use anaconda, run the following:
+```
 conda create -n deep3d python=3.6
 source activate deep3d
-pip install tensorflow-gpu==1.12.0
+conda install tensorflow-gpu==1.12.0
 pip install pillow argparse scipy
 ```
 
-Alternatively, you can install tensorflow via conda install (no need to set cuda version in this way):
-```bash
-conda install tensorflow-gpu==1.12.0
+Alternatively, you can install tensorflow via pip install (In this way, you need to link /usr/local/cuda to cuda-9.0):
 ```
-#### 2. Compile tf_mesh_renderer
+pip install tensorflow-gpu==1.12.0
+```
+
+#### 3. Compile tf_mesh_renderer
 
 If you install tensorflow using pip,  we provide a [pre-compiled binary file (rasterize_triangles_kernel.so)](https://drive.google.com/file/d/1VUtJPdg0UiJkKWxkACs8ZTf5L7Y4P9Wj/view?usp=sharing) of the library. **Note that the pre-compiled file can only be run with tensorflow 1.12.**
 
-If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile [tf_mesh_renderer](https://github.com/google/tf_mesh_renderer) with Bazel. We use its [older version](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb) because we find the latest version unstable during our training process:
-```bash
-git clone https://github.com/google/tf_mesh_renderer.git
+If you install tensorflow using conda, you have to compile tf_mesh_renderer from sources. Compile tf_mesh_renderer with Bazel. We use its [older version](https://github.com/google/tf_mesh_renderer/tree/ba27ea1798f6ee8d03ddbc52f42ab4241f9328bb) because we find the latest version unstable during our training process:
+```
 cd tf_mesh_renderer
 git checkout ba27ea1798
 git checkout master WORKSPACE
 bazel test ...
+cd ..
 ```
-If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so" in ./bazel-bin/mesh_renderer/kernels. **Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.**
+**Set -D_GLIBCXX_USE_CXX11_ABI=1 in ./mesh_renderer/kernels/BUILD before the compilation.** If the library is compiled correctly, there should be a file named "rasterize_triangles_kernel.so" in ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels.
 
+After compilation, copy corresponding files to ./renderer subfolder:
+```
+mkdir renderer
+cp ./tf_mesh_renderer/mesh_renderer/{camera_utils.py,mesh_renderer.py,rasterize_triangles.py} ./renderer/
+cp ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels/rasterize_triangles_kernel.so ./renderer/
+```
+If you download our pre-compiled binary file, put it into ./renderer subfolder as well.
+
+Finally, replace the library path in ./renderer/mesh_renderer.py (Line 26) with "./renderer/rasterize_triangles_kernel.so"
 
 
 ### Testing with pre-trained network ###
 
-1. Clone the repository 
+1. Download the Basel Face Model. Due to the license agreement of Basel Face Model, you have to download the BFM09 model after submitting an application on its [home page](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-2&id=downloads). After getting the access to BFM data, download "01_MorphableModel.mat" and put it into ./BFM subfolder.
 
-```bash
-git clone https://github.com/Microsoft/Deep3DFaceReconstruction
-cd Deep3DFaceReconstruction
-```
+2. Download the Expression Basis provided by [Guo et al.](https://github.com/Juyong/3DFace) You can find a link named "CoarseData" in the first row of Introduction part in their repository. Download and unzip the Coarse_Dataset.zip. Put "Exp_Pca.bin" into ./BFM subfolder. The expression basis are constructed using [Facewarehouse](http://kunzhou.net/zjugaps/facewarehouse/) data and transferred to BFM topology.
 
-2. Download the Basel Face Model. Due to the license agreement of Basel Face Model, you have to download the BFM09 model after submitting an application on its [home page](https://faces.dmi.unibas.ch/bfm/main.php?nav=1-2&id=downloads). After getting the access to BFM data, download "01_MorphableModel.mat" and put it into ./BFM subfolder.
+3. Download the pre-trained [reconstruction network](https://drive.google.com/file/d/176LCdUDxAj7T2awQ5knPMPawq5Q2RUWM/view?usp=sharing), unzip it and put "FaceReconModel.pb" into ./network subfolder.
 
-3. Download the Expression Basis provided by [Guo et al.](https://github.com/Juyong/3DFace) You can find a link named "CoarseData" in the first row of Introduction part in their repository. Download and unzip the Coarse_Dataset.zip. Put "Exp_Pca.bin" into ./BFM subfolder. The expression basis are constructed using [Facewarehouse](http://kunzhou.net/zjugaps/facewarehouse/) data and transferred to BFM topology.
-
-4. Put the compiled rasterize_triangles_kernel.so into ./renderer folder.
-
-5. Download the pre-trained [reconstruction network](https://drive.google.com/file/d/176LCdUDxAj7T2awQ5knPMPawq5Q2RUWM/view?usp=sharing), unzip it and put "FaceReconModel.pb" into ./network subfolder.
-
-6. Run the demo code.
+4. Run the demo code.
 
 ```
 python demo.py
 ```
 
-7. ./input subfolder contains several test images and ./output subfolder stores their reconstruction results. For each input test image, two output files can be obtained after running the demo code:
+5. ./input subfolder contains several test images and ./output subfolder stores their reconstruction results. For each input test image, two output files can be obtained after running the demo code:
 	- "xxx.mat" : 
 		- cropped_img: an RGB image after alignment, which is the input to the R-Net
 		- recon_img: an RGBA reconstruction image aligned with the input image (only on Linux).
