@@ -221,7 +221,7 @@ Upload the training code for single image face reconstruction.
 
 5. Our model may give inferior results for images with severe perspetive distortions (e.g., some selfies). In addition, we cannot well handle faces with eyes closed due to the lack of these kind of images in the training data.
   
-5. If you have any further questions, please contact Yu Deng (t-yudeng@microsoft.com) and Jiaolong Yang (jiaoyan@microsoft.com).
+5. If you have any further questions, please contact Yu Deng (dengyu2008@hotmail.com) and Jiaolong Yang (jiaoyan@microsoft.com).
 
 
 ## Citation
