@@ -111,7 +111,6 @@ If the library is compiled correctly, there should be a file named "rasterize_tr
 
 After compilation, copy corresponding files to ./renderer subfolder:
 ```
-cd renderer
 cp ./tf_mesh_renderer/mesh_renderer/{camera_utils.py,mesh_renderer.py,rasterize_triangles.py} ./renderer/
 cp ./tf_mesh_renderer/bazel-bin/mesh_renderer/kernels/rasterize_triangles_kernel.so ./renderer/
 ```
