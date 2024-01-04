@@ -65,7 +65,7 @@ def demo():
 		opt.batch_size = 1
 		opt.pretrain_weights = args.pretrain_weights
 		FaceReconstructor = Face3D()
-		images = tf.placeholder(name = 'input_imgs', shape = [opt.batch_size,224,224,3], dtype = tf.float32)
+		images = tf.compat.v1.placeholder(name = 'input_imgs', shape = [opt.batch_size,224,224,3], dtype = tf.float32)
 
 		if args.use_pb and os.path.isfile('network/FaceReconModel.pb'):
 			print('Using pre-trained .pb file.')
@@ -88,7 +88,7 @@ def demo():
 		tri = FaceReconstructor.facemodel.face_buf
 
 
-		with tf.Session() as sess:
+		with tf.compat.v1.Session() as sess:
 			if not args.use_pb :
 				restore_weights(sess,opt)
 

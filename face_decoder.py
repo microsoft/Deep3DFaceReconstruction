@@ -116,7 +116,7 @@ class Face3D():
 		v3 = tf.gather(shape,face_id[:,2], axis = 1)
 		e1 = v1 - v2
 		e2 = v2 - v3
-		face_norm = tf.cross(e1,e2)
+		face_norm = tf.compat.v1.cross(e1,e2)
 
 		face_norm = tf.nn.l2_normalize(face_norm, dim = 2) # normalized face_norm first
 		face_norm = tf.concat([face_norm,tf.zeros([tf.shape(face_shape)[0],1,3])], axis = 1)
