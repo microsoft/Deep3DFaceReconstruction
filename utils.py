@@ -130,8 +130,8 @@ def save_obj(path,v,f,c):
 
 # load .pb file into tensorflow graph
 def load_graph(graph_filename):
-	with tf.gfile.GFile(graph_filename,'rb') as f:
-		graph_def = tf.GraphDef()
+	with tf.compat.v1.gfile.GFile(graph_filename,'rb') as f:
+		graph_def = tf.compat.v1.GraphDef()
 		graph_def.ParseFromString(f.read())
 
 	return graph_def
