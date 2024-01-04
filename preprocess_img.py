@@ -71,7 +71,9 @@ def align_img(img,lm,lm3D):
 	# processing the image
 	img_new,lm_new = resize_n_crop_img(img,lm,t,s)
 	lm_new = np.stack([lm_new[:,0],223 - lm_new[:,1]], axis = 1)
-	trans_params = np.array([w0,h0,102.0/s,t[0],t[1]])
+	trans_params = np.array([w0,h0,102.0/s])
+	trans_params = np.append(trans_params, t[0])
+	trans_params = np.append(trans_params, t[1])
 
 	return img_new,lm_new,trans_params
 
