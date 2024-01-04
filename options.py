@@ -27,7 +27,7 @@ class Option():
 		self.val_summary_path = os.path.join(self.summary_dir, 'val')
 		#---------------------------------------------------------------------------------------
 		# visible gpu settings
-		self.config = tf.ConfigProto()
+		self.config = tf.compat.v1.ConfigProto()
 		self.config.gpu_options.visible_device_list = '0'
 		self.use_pb = True
 		#---------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ class Option():
 		self.boundaries = [100000]
 		lr = [1e-4,2e-5]
 		self.global_step = tf.Variable(0,name='global_step',trainable = False)
-		self.lr = tf.train.piecewise_constant(self.global_step,self.boundaries,lr)
+		self.lr = tf.compat.v1.train.piecewise_constant(self.global_step,self.boundaries,lr)
 		self.augment = True
 		self.train_maxiter = 200000
 		self.train_summary_iter = 50
